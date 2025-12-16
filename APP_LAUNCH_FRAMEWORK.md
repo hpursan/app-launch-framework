@@ -80,11 +80,25 @@ This document serves as a master protocol for launching new applications. It is 
 > 3. **Error Handling:** Create a global Error Boundary component to catch crashes."
 
 ### Step 3.3: Observability & Analytics
+
+#### Option A: Managed (Sentry + PostHog) - *Recommended for Speed*
 **Prompt for AI:**
-> "Let's make this production-ready.
-> 1. (Optional) Provide instructions to integrate Sentry (`sentry-expo`) for crash reporting.
-> 2. (Optional) Provide instructions to integrate PostHog or Amplitude for event tracking.
+> "Let's make this production-ready using managed services.
+> 1. Provide instructions to integrate Sentry (`@sentry/react-native`) for crash reporting and auto-instrumentation.
+> 2. Provide instructions to integrate PostHog for event tracking.
 > 3. Create a `services/analytics.js` wrapper so we can easily swap providers later."
+
+#### Option B: Open Source Standards (OpenTelemetry + Jaeger/Prometheus) - *Recommended for Control*
+**Prompt for AI:**
+> "We want to use vendor-neutral standards.
+> 1. Install `@opentelemetry/api` and the React Native compatible SDKs.
+> 2. Create a `services/telemetry.js` that initializes a `WebTracerProvider`.
+> 3. Configure it to export traces via OTLP (HTTP) to a generic OpenTelemetry Collector endpoint.
+> 4. **Infrastructure:** Generate a `docker-compose.yml` that spins up:
+>    - **OTel Collector** (Gateway to receive app data).
+>    - **Jaeger** (For visualizing traces).
+>    - **Prometheus** (For storing metrics).
+> 5. **Instrumentation:** Show me how to manually wrap a critical function (e.g., 'Login') in a custom Span."
 
 ---
 
